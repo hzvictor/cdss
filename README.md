@@ -1,71 +1,106 @@
-<a href="https://chatbot.ai-sdk.dev/demo">
-  <img alt="Chatbot" src="app/(chat)/opengraph-image.png">
-  <h1 align="center">Chatbot</h1>
-</a>
+# 乳腺癌副作用评估 CDSS
 
-<p align="center">
-    Chatbot (formerly AI Chatbot) is a free, open-source template built with Next.js and the AI SDK that helps you quickly build powerful chatbot applications.
-</p>
+一个最小可运行的乳腺癌副作用评估原型。用户可以在聊天框或评估页输入症状描述，系统返回风险等级、下一步建议、是否建议联系医疗团队，以及命中的规则依据。
 
-<p align="center">
-  <a href="https://chatbot.ai-sdk.dev/docs"><strong>Read Docs</strong></a> ·
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#running-locally"><strong>Running locally</strong></a>
-</p>
-<br/>
+> 说明：本项目是面试 demo / 原型系统，不构成医学建议。紧急情况请立即线下就医或联系医疗团队。
 
-## Features
+## 核心功能
 
-- [Next.js](https://nextjs.org) App Router
-  - Advanced routing for seamless navigation and performance
-  - React Server Components (RSCs) and Server Actions for server-side rendering and increased performance
-- [AI SDK](https://ai-sdk.dev/docs/introduction)
-  - Unified API for generating text, structured objects, and tool calls with LLMs
-  - Hooks for building dynamic chat and generative user interfaces
-  - Supports OpenAI, Anthropic, Google, xAI, and other model providers via AI Gateway
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
-- Data Persistence
-  - [Neon Serverless Postgres](https://vercel.com/marketplace/neon) for saving chat history and user data
-  - [Vercel Blob](https://vercel.com/storage/blob) for efficient file storage
-- [Auth.js](https://authjs.dev)
-  - Simple and secure authentication
+- 症状输入：支持聊天框输入，也支持独立评估页 `/assess`
+- 风险分层：高风险 / 中风险 / 低风险
+- 结果卡片：展示风险等级、建议、命中规则和审计信息
+- 历史记录：查看过往评估结果
+- 协同请求：高风险时建议联系医疗团队
+- 可观测性：记录 `assessment_started`、`assessment_submitted`、`result_viewed`、`contact_team_clicked`、`assessment_closed`
 
-## Model Providers
+## 系统设计
 
-This template uses the [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) to access multiple AI models through a unified interface. Models are configured in `lib/ai/models.ts` with per-model provider routing. Included models: Mistral, Moonshot, DeepSeek, OpenAI, and xAI.
+```mermaid
+flowchart TD
+  A["用户输入症状描述"]
+  B["/api/chat\n流式聊天接口"]
+  C["模型调用 assessSideEffect tool"]
+  D["runAssessment\n评估编排器"]
+  E["LLM 抽取症状关键词"]
+  F["规则引擎\n162 条规则匹配"]
+  G["数据库事务写入\n结果 / 建议 / 依据 / 协同请求"]
+  H["返回 assessment bundle"]
+  I["前端渲染 AssessmentCard"]
 
-### AI Gateway Authentication
+  A --> B --> C --> D
+  D --> E --> F --> G --> H --> I
+```
 
-**For Vercel deployments**: Authentication is handled automatically via OIDC tokens.
+## 评估逻辑
 
-**For non-Vercel deployments**: You need to provide an AI Gateway API key by setting the `AI_GATEWAY_API_KEY` environment variable in your `.env.local` file.
+系统采用“规则引擎为主，LLM 辅助”的设计：
 
-With the [AI SDK](https://ai-sdk.dev/docs/introduction), you can also switch to direct LLM providers like [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://ai-sdk.dev/providers/ai-sdk-providers) with just a few lines of code.
+1. LLM 从用户描述中抽取症状关键词。
+2. 规则引擎对原文和关键词做匹配。
+3. 命中多条规则时，取最高风险等级。
+4. 结果、建议、命中规则、生成时间和版本号都会写入数据库，方便审计追溯。
 
-## Deploy Your Own
+## 数据表
 
-You can deploy your own version of Chatbot to Vercel with one click:
+| 表 | 作用 |
+|---|---|
+| `Assessment` | 评估主记录 |
+| `Advice` | 下一步建议 |
+| `Evidence` | 命中规则和关键词依据 |
+| `RuleSource` | 规则来源和版本 |
+| `ContactRequest` | 联系团队请求 |
+| `EventLog` | 用户行为事件 |
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/templates/next.js/chatbot)
+## 主要页面
 
-## Running locally
+- `/`：聊天入口
+- `/assess`：独立评估页
+- `/assess/[id]`：评估结果页
+- `/history`：历史记录
+- `/admin/assessments`：后台评估记录
+- `/admin/events`：事件日志
+- `/admin/rules`：规则库
 
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
+## 技术栈
 
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various AI and authentication provider accounts.
+- Next.js App Router
+- React
+- TypeScript
+- Tailwind CSS
+- AI SDK
+- Drizzle ORM
+- PostgreSQL
+- Auth.js
+- Vitest / Playwright
 
-1. Install Vercel CLI: `npm i -g vercel`
-2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
-3. Download your environment variables: `vercel env pull`
+## 本地运行
 
 ```bash
 pnpm install
-pnpm db:migrate # Setup database or apply latest database changes
+pnpm db:migrate
+pnpm db:seed
 pnpm dev
 ```
 
-Your app template should now be running on [localhost:3000](http://localhost:3000).
+访问：
+
+```text
+http://localhost:3000
+```
+
+## 测试
+
+```bash
+pnpm test:unit
+pnpm exec tsc --noEmit
+```
+
+当前已验证：
+
+- 规则引擎单元测试通过
+- TypeScript 类型检查通过
+
+## 更多说明
+
+- [系统设计图](./SYSTEM_DESIGN.zh-CN.md)
+- [面试系统设计说明](./INTERVIEW.md)
