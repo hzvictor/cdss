@@ -18,7 +18,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       />
       <DataStreamProvider>
         <Suspense fallback={<div className="flex h-dvh bg-sidebar" />}>
-          <SidebarShell>{children}</SidebarShell>
+          <div className="cdss-theme cdss-grain min-h-dvh">
+            <SidebarShell>{children}</SidebarShell>
+          </div>
         </Suspense>
       </DataStreamProvider>
     </>

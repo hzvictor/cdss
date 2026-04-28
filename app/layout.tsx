@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, Geist, Geist_Mono, Noto_Serif_SC } from "next/font/google";
+import { ServiceWorkerRegister } from "@/components/cdss/sw-register";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -8,8 +9,8 @@ import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://chat.vercel.ai"),
-  title: "Next.js Chatbot Template",
-  description: "Next.js chatbot template using the AI SDK.",
+  title: "CDSS · 乳腺癌副作用评估",
+  description: "面向乳腺癌患者的副作用评估 Agent — 规则引擎 + AI，可审计、可追溯。",
 };
 
 export const viewport = {
@@ -26,6 +27,20 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-geist-mono",
+});
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-fraunces",
+  axes: ["opsz", "SOFT"],
+});
+
+const notoSerifSC = Noto_Serif_SC({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-serif-sc",
 });
 
 const LIGHT_THEME_COLOR = "hsl(0 0% 100%)";
@@ -55,8 +70,8 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      className={`${geist.variable} ${geistMono.variable}`}
-      lang="en"
+      className={`${geist.variable} ${geistMono.variable} ${fraunces.variable} ${notoSerifSC.variable}`}
+      lang="zh-Hans"
       suppressHydrationWarning
     >
       <head>
@@ -78,6 +93,7 @@ export default function RootLayout({
             basePath={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/api/auth`}
           >
             <TooltipProvider>{children}</TooltipProvider>
+            <ServiceWorkerRegister />
           </SessionProvider>
         </ThemeProvider>
       </body>

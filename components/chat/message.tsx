@@ -20,6 +20,10 @@ import { MessageActions } from "./message-actions";
 import { MessageReasoning } from "./message-reasoning";
 import { PreviewAttachment } from "./preview-attachment";
 import { Weather } from "./weather";
+import {
+  AssessmentCard,
+  type AssessmentBundle,
+} from "@/components/cdss/assessment-card";
 
 const PurePreviewMessage = ({
   addToolApprovalResponse,
@@ -214,6 +218,44 @@ const PurePreviewMessage = ({
               )}
             </ToolContent>
           </Tool>
+        </div>
+      );
+    }
+
+    if (type === "tool-assessSideEffect") {
+      const { toolCallId, state } = part;
+      const widthClass = "w-full max-w-[640px]";
+      if (state === "output-available") {
+        const out = part.output as
+          | AssessmentBundle
+          | { error: string }
+          | undefined;
+        if (out && "error" in out) {
+          return (
+            <div className={widthClass} key={toolCallId}>
+              <div className="rounded-md border border-red-200 bg-red-50 p-3 text-red-600 text-sm dark:bg-red-950/50">
+                评估失败：{out.error}
+              </div>
+            </div>
+          );
+        }
+        if (out) {
+          return (
+            <div className={widthClass} key={toolCallId}>
+              <div className="cdss-theme">
+                <AssessmentCard bundle={out} />
+              </div>
+            </div>
+          );
+        }
+      }
+      // Streaming/loading states fall through to a slim status pill
+      return (
+        <div className={widthClass} key={toolCallId}>
+          <div className="inline-flex items-center gap-2 rounded-full border bg-muted/40 px-3 py-1.5 text-muted-foreground text-xs">
+            <span className="size-1.5 animate-pulse rounded-full bg-current" />
+            正在分析症状并比对规则…
+          </div>
         </div>
       );
     }

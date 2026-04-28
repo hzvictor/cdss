@@ -510,7 +510,9 @@ function PureMultimodalInput({
             }
           }}
           placeholder={
-            editingMessage ? "Edit your message..." : "Ask anything..."
+            editingMessage
+              ? "修改您的描述…"
+              : "请描述您最近的不适，包括出现时间、严重程度…"
           }
           ref={textareaRef}
           value={input}

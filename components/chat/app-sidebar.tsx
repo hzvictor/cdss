@@ -74,10 +74,16 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                 <SidebarMenuButton
                   asChild
                   className="size-8 !px-0 items-center justify-center group-data-[collapsible=icon]:group-hover/logo:opacity-0"
-                  tooltip="Chatbot"
+                  tooltip="CDSS"
                 >
-                  <Link href="/" onClick={() => setOpenMobile(false)}>
-                    <MessageSquareIcon className="size-4 text-sidebar-foreground/50" />
+                  <Link
+                    href="/"
+                    onClick={() => setOpenMobile(false)}
+                    className="grid size-7 place-items-center rounded-full border border-[var(--cdss-line)] bg-[var(--cdss-paper)]"
+                  >
+                    <span className="font-display font-semibold text-[12px] text-[color:var(--primary)]">
+                      C
+                    </span>
                   </Link>
                 </SidebarMenuButton>
                 <Tooltip>
@@ -114,7 +120,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                     tooltip="New Chat"
                   >
                     <PenSquareIcon className="size-4" />
-                    <span className="font-medium">New chat</span>
+                    <span className="font-medium">新建评估</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
                 {user && (
@@ -125,7 +131,7 @@ export function AppSidebar({ user }: { user: User | undefined }) {
                       tooltip="Delete All Chats"
                     >
                       <TrashIcon className="size-4" />
-                      <span className="text-[13px]">Delete all</span>
+                      <span className="text-[13px]">清空记录</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 )}

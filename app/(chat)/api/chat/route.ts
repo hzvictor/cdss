@@ -43,6 +43,7 @@ import { checkIpRateLimit } from "@/lib/ratelimit";
 import type { ChatMessage } from "@/lib/types";
 import { convertToUIMessages, generateUUID } from "@/lib/utils";
 import { generateTitleFromUserMessage } from "../../actions";
+import { assessSideEffect } from "@/lib/ai/tools/assess-side-effect";
 import { type PostRequestBody, postRequestBodySchema } from "./schema";
 
 export const maxDuration = 60;
@@ -205,6 +206,7 @@ export async function POST(request: Request) {
                   "editDocument",
                   "updateDocument",
                   "requestSuggestions",
+                  "assessSideEffect",
                 ],
           providerOptions: {
             ...(modelConfig?.gatewayOrder && {
@@ -232,6 +234,7 @@ export async function POST(request: Request) {
               dataStream,
               modelId: chatModel,
             }),
+            assessSideEffect: assessSideEffect({ session }),
           },
           experimental_telemetry: {
             isEnabled: isProductionEnvironment,

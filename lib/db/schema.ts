@@ -2,6 +2,7 @@ import type { InferSelectModel } from "drizzle-orm";
 import {
   boolean,
   foreignKey,
+  integer,
   json,
   pgTable,
   primaryKey,
@@ -134,3 +135,128 @@ export const stream = pgTable(
 );
 
 export type Stream = InferSelectModel<typeof stream>;
+
+// ============================================================
+// CDSS — 乳腺癌副作用评估智能体
+// ============================================================
+
+const RISK_LEVELS = ["high", "medium", "low"] as const;
+
+export const assessment = pgTable("Assessment", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  userId: uuid("userId")
+    .notNull()
+    .references(() => user.id),
+  inputText: text("inputText").notNull(),
+  riskLevel: varchar("riskLevel", { enum: RISK_LEVELS }).notNull(),
+  summary: text("summary").notNull(),
+  shouldContactTeam: boolean("shouldContactTeam").notNull(),
+  ruleVersion: varchar("ruleVersion", { length: 16 }).notNull(),
+  modelId: varchar("modelId", { length: 64 }).notNull(),
+  modelVersion: varchar("modelVersion", { length: 32 }).notNull(),
+  status: varchar("status", { enum: ["open", "closed"] })
+    .notNull()
+    .default("open"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  closedAt: timestamp("closedAt"),
+});
+
+export type Assessment = InferSelectModel<typeof assessment>;
+
+export const advice = pgTable("Advice", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  assessmentId: uuid("assessmentId")
+    .notNull()
+    .references(() => assessment.id, { onDelete: "cascade" }),
+  type: varchar("type", {
+    enum: ["immediate_care", "contact_team", "monitor", "record"],
+  }).notNull(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  priority: integer("priority").notNull().default(0),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+});
+
+export type Advice = InferSelectModel<typeof advice>;
+
+export const ruleSource = pgTable(
+  "RuleSource",
+  {
+    id: varchar("id", { length: 16 }).notNull(),
+    version: varchar("version", { length: 16 }).notNull(),
+    name: text("name").notNull(),
+    description: text("description").notNull(),
+    keywords: json("keywords").notNull(),
+    severity: varchar("severity", { enum: RISK_LEVELS }).notNull(),
+    adviceTemplate: text("adviceTemplate").notNull(),
+    effectiveFrom: timestamp("effectiveFrom").notNull().defaultNow(),
+    effectiveTo: timestamp("effectiveTo"),
+    isActive: boolean("isActive").notNull().default(true),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.id, table.version] }),
+  })
+);
+
+export type RuleSource = InferSelectModel<typeof ruleSource>;
+
+export const evidence = pgTable(
+  "Evidence",
+  {
+    id: uuid("id").primaryKey().notNull().defaultRandom(),
+    assessmentId: uuid("assessmentId")
+      .notNull()
+      .references(() => assessment.id, { onDelete: "cascade" }),
+    ruleId: varchar("ruleId", { length: 16 }).notNull(),
+    ruleVersion: varchar("ruleVersion", { length: 16 }).notNull(),
+    matchedText: text("matchedText").notNull(),
+    matchedKeywords: json("matchedKeywords").notNull(),
+    severity: varchar("severity", { enum: RISK_LEVELS }).notNull(),
+    source: varchar("source", { enum: ["rule", "llm"] }).notNull(),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+  },
+  (table) => ({
+    ruleRef: foreignKey({
+      columns: [table.ruleId, table.ruleVersion],
+      foreignColumns: [ruleSource.id, ruleSource.version],
+    }),
+  })
+);
+
+export type Evidence = InferSelectModel<typeof evidence>;
+
+export const contactRequest = pgTable("ContactRequest", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  assessmentId: uuid("assessmentId")
+    .notNull()
+    .references(() => assessment.id, { onDelete: "cascade" }),
+  userId: uuid("userId")
+    .notNull()
+    .references(() => user.id),
+  channel: varchar("channel", { enum: ["team", "emergency"] }).notNull(),
+  status: varchar("status", {
+    enum: ["suggested", "created", "accepted", "closed"],
+  })
+    .notNull()
+    .default("suggested"),
+  note: text("note"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+});
+
+export type ContactRequest = InferSelectModel<typeof contactRequest>;
+
+export const eventLog = pgTable("EventLog", {
+  id: uuid("id").primaryKey().notNull().defaultRandom(),
+  userId: uuid("userId").references(() => user.id),
+  assessmentId: uuid("assessmentId").references(() => assessment.id, {
+    onDelete: "set null",
+  }),
+  eventName: varchar("eventName", { length: 64 }).notNull(),
+  payload: json("payload").notNull(),
+  userAgent: text("userAgent"),
+  ipHash: varchar("ipHash", { length: 64 }),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+});
+
+export type EventLog = InferSelectModel<typeof eventLog>;

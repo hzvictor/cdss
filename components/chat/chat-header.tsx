@@ -1,11 +1,10 @@
 "use client";
 
-import { PanelLeftIcon } from "lucide-react";
+import { ClockIcon, PanelLeftIcon, ShieldIcon } from "lucide-react";
 import Link from "next/link";
 import { memo } from "react";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
-import { VercelIcon } from "./icons";
 import { VisibilitySelector, type VisibilityType } from "./visibility-selector";
 
 function PureChatHeader({
@@ -34,15 +33,6 @@ function PureChatHeader({
         <PanelLeftIcon className="size-4" />
       </Button>
 
-      <Link
-        className="flex size-8 items-center justify-center rounded-lg md:hidden"
-        href="https://vercel.com/templates/next.js/chatbot"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        <VercelIcon size={14} />
-      </Link>
-
       {!isReadonly && (
         <VisibilitySelector
           chatId={chatId}
@@ -50,19 +40,33 @@ function PureChatHeader({
         />
       )}
 
-      <Button
-        asChild
-        className="hidden rounded-lg bg-foreground px-4 text-background hover:bg-foreground/90 md:ml-auto md:flex"
-      >
-        <Link
-          href="https://vercel.com/templates/next.js/chatbot"
-          rel="noopener noreferrer"
-          target="_blank"
+      <nav className="ml-auto flex items-center gap-1">
+        <Button
+          asChild
+          variant="ghost"
+          size="sm"
+          className="rounded-lg text-muted-foreground hover:text-foreground"
         >
-          <VercelIcon size={16} />
-          Deploy with Vercel
-        </Link>
-      </Button>
+          <Link href="/history" className="flex items-center gap-1.5">
+            <ClockIcon className="size-3.5" />
+            <span className="hidden sm:inline">评估历史</span>
+          </Link>
+        </Button>
+        <Button
+          asChild
+          variant="ghost"
+          size="sm"
+          className="rounded-lg text-muted-foreground hover:text-foreground"
+        >
+          <Link
+            href="/admin/assessments"
+            className="flex items-center gap-1.5"
+          >
+            <ShieldIcon className="size-3.5" />
+            <span className="hidden sm:inline">管理后台</span>
+          </Link>
+        </Button>
+      </nav>
     </header>
   );
 }

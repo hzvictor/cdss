@@ -498,3 +498,165 @@ textarea:focus-visible {
 [data-testid="artifact"] {
   isolation: isolate;
 }
+
+/* ============================================================
+   CDSS scoped theme — editorial serif + warm cream
+   Applied via .cdss-theme on (cdss) layout root.
+   Uses oklch tokens that override base shadcn tokens locally.
+   ============================================================ */
+
+.cdss-theme {
+  /* Higher-contrast palette — clean off-white + deep ink + saturated accent.
+     Body 4.5:1+ guaranteed; muted 4.5:1+. Risk colors more saturated.        */
+  --background: oklch(0.99 0.003 80);          /* near-white */
+  --foreground: oklch(0.13 0.012 30);          /* near-black ink */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.13 0.012 30);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.13 0.012 30);
+  --primary: oklch(0.42 0.18 25);              /* warm crimson — medical-serious, not corporate-blue */
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.96 0.005 80);
+  --secondary-foreground: oklch(0.2 0.01 30);
+  --muted: oklch(0.96 0.005 80);
+  --muted-foreground: oklch(0.36 0.012 40);    /* dark-enough for 4.5:1 on near-white */
+  --accent: oklch(0.95 0.01 80);
+  --accent-foreground: oklch(0.18 0.01 30);
+  --destructive: oklch(0.5 0.2 25);
+  --border: oklch(0.84 0.01 80);               /* visible hairline */
+  --input: oklch(0.94 0.008 80);
+  --ring: oklch(0.55 0.16 25);
+
+  --cdss-paper: oklch(1 0 0);
+  --cdss-line: oklch(0.82 0.012 80);
+  --cdss-rule: oklch(0.94 0.008 80);
+
+  /* Risk: saturated, but text-foreground stays dark for legibility */
+  --cdss-risk-high-bg: oklch(0.94 0.06 25);
+  --cdss-risk-high-fg: oklch(0.32 0.18 25);
+  --cdss-risk-high-border: oklch(0.66 0.18 25);
+
+  --cdss-risk-medium-bg: oklch(0.95 0.07 75);
+  --cdss-risk-medium-fg: oklch(0.36 0.13 70);
+  --cdss-risk-medium-border: oklch(0.7 0.14 75);
+
+  --cdss-risk-low-bg: oklch(0.95 0.05 150);
+  --cdss-risk-low-fg: oklch(0.32 0.1 155);
+  --cdss-risk-low-border: oklch(0.65 0.12 150);
+}
+
+.dark .cdss-theme {
+  --background: oklch(0.18 0.01 30);
+  --foreground: oklch(0.94 0.012 80);
+  --card: oklch(0.22 0.01 30);
+  --muted: oklch(0.22 0.01 30);
+  --muted-foreground: oklch(0.7 0.02 40);
+  --border: oklch(0.3 0.015 30);
+  --cdss-paper: oklch(0.22 0.01 30);
+  --cdss-line: oklch(0.32 0.02 30);
+  --cdss-rule: oklch(0.27 0.015 30);
+  --cdss-risk-high-bg: oklch(0.27 0.05 35);
+  --cdss-risk-high-fg: oklch(0.82 0.11 35);
+  --cdss-risk-high-border: oklch(0.45 0.09 35);
+  --cdss-risk-medium-bg: oklch(0.27 0.05 80);
+  --cdss-risk-medium-fg: oklch(0.84 0.11 80);
+  --cdss-risk-medium-border: oklch(0.45 0.09 80);
+  --cdss-risk-low-bg: oklch(0.25 0.04 145);
+  --cdss-risk-low-fg: oklch(0.84 0.09 145);
+  --cdss-risk-low-border: oklch(0.42 0.07 145);
+}
+
+.cdss-theme {
+  font-family:
+    var(--font-geist),
+    var(--font-serif-sc),
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+  min-height: 100dvh;
+}
+
+.cdss-theme .font-display {
+  font-family:
+    var(--font-fraunces),
+    var(--font-serif-sc),
+    "Songti SC",
+    "STSong",
+    serif;
+  font-feature-settings: "ss01", "ss02";
+  letter-spacing: -0.01em;
+}
+
+.cdss-theme .font-zh-serif {
+  font-family:
+    var(--font-fraunces),
+    var(--font-serif-sc),
+    "Songti SC",
+    "STSong",
+    serif;
+}
+
+.cdss-theme .cdss-rule-line {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--cdss-line) 20%,
+    var(--cdss-line) 80%,
+    transparent
+  );
+}
+
+.cdss-theme .cdss-paper-card {
+  background-color: var(--cdss-paper);
+  border: 1px solid var(--border);
+}
+
+/* grain removed — was washing out content & hurting contrast */
+.cdss-theme .cdss-grain {
+  position: relative;
+}
+
+@keyframes cdssReveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cdss-theme .cdss-reveal {
+  animation: cdssReveal 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;
+}
+
+/* a11y: respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .cdss-theme .cdss-reveal {
+    animation: none;
+  }
+  .cdss-theme *,
+  .cdss-theme *::before,
+  .cdss-theme *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* a11y: keyboard focus on custom buttons + interactive elements within cdss-theme */
+.cdss-theme button:focus-visible,
+.cdss-theme a:focus-visible,
+.cdss-theme [role="button"]:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 0;
+}
+.cdss-theme :focus:not(:focus-visible) {
+  outline: none;
+}
