@@ -26,12 +26,12 @@ export const Greeting = () => {
   const ease: [number, number, number, number] = [0.22, 1, 0.36, 1];
   return (
     <div
-      className="mx-auto flex w-full max-w-3xl flex-col items-stretch px-6"
+      className="mx-auto flex w-full max-w-3xl flex-col items-stretch px-4 sm:px-6"
       key="overview"
     >
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="font-mono text-[11px] uppercase tracking-[0.32em] text-muted-foreground"
+        className="break-words font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground sm:text-[11px] sm:tracking-[0.32em]"
         initial={{ opacity: 0, y: 8 }}
         transition={{ delay: 0.15, duration: 0.5, ease }}
       >
@@ -48,19 +48,17 @@ export const Greeting = () => {
 
       <motion.h1
         animate={{ opacity: 1, y: 0 }}
-        className="mt-8 font-display font-medium text-[44px] leading-[1.05] tracking-tight text-foreground sm:text-[56px]"
+        className="mt-6 break-words font-display font-medium leading-[1.1] tracking-tight text-foreground text-[28px] sm:mt-8 sm:text-[44px] md:text-[56px]"
         initial={{ opacity: 0, y: 12 }}
         transition={{ delay: 0.35, duration: 0.55, ease }}
       >
-        请描述您
-        <br className="sm:hidden" />
-        在治疗期间的
+        请描述您治疗期间的
         <span className="font-display italic"> 不适</span>
       </motion.h1>
 
       <motion.p
         animate={{ opacity: 1, y: 0 }}
-        className="mt-6 max-w-xl font-zh-serif text-[17px] leading-[1.85] text-muted-foreground"
+        className="mt-5 max-w-xl break-words font-zh-serif text-[14px] leading-[1.8] text-muted-foreground sm:mt-6 sm:text-[17px] sm:leading-[1.85]"
         initial={{ opacity: 0, y: 12 }}
         transition={{ delay: 0.5, duration: 0.55, ease }}
       >
@@ -75,7 +73,7 @@ export const Greeting = () => {
 
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2"
+        className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1.5 sm:mt-6 sm:gap-x-3 sm:gap-y-2"
         initial={{ opacity: 0, y: 12 }}
         transition={{ delay: 0.55, duration: 0.55, ease }}
       >
@@ -85,7 +83,7 @@ export const Greeting = () => {
         {REGIMENS.map((r) => (
           <span
             key={r}
-            className="border border-[var(--cdss-line)] px-2 py-0.5 font-mono text-[11px] tracking-wide text-foreground"
+            className="border border-[var(--cdss-line)] px-1.5 py-0.5 font-mono text-[10px] tracking-wide text-foreground sm:px-2 sm:text-[11px]"
           >
             {r}
           </span>
@@ -94,25 +92,25 @@ export const Greeting = () => {
 
       <motion.dl
         animate={{ opacity: 1, y: 0 }}
-        className="mt-10 grid grid-cols-1 divide-y divide-[var(--cdss-line)] border-y border-[var(--cdss-line)] sm:grid-cols-2 sm:divide-x sm:divide-y-0"
+        className="mt-8 grid grid-cols-1 divide-y divide-[var(--cdss-line)] border-y border-[var(--cdss-line)] sm:mt-10 sm:grid-cols-2 sm:divide-x sm:divide-y-0"
         initial={{ opacity: 0, y: 12 }}
         transition={{ delay: 0.65, duration: 0.55, ease }}
       >
         {SCOPE.map((s, i) => (
           <div
             key={s.code}
-            className={`flex items-baseline gap-4 px-1 py-3 sm:px-4 ${
-              i >= 2 && i % 2 === 0 ? "sm:border-t sm:border-[var(--cdss-line)]" : ""
-            } ${i >= 2 && i % 2 === 1 ? "sm:border-t sm:border-[var(--cdss-line)]" : ""}`}
+            className={`flex items-baseline gap-3 px-1 py-3 sm:gap-4 sm:px-4 ${
+              i >= 2 ? "sm:border-t sm:border-[var(--cdss-line)]" : ""
+            }`}
           >
             <dt className="shrink-0 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
               {s.code}
             </dt>
-            <div className="flex-1">
-              <p className="font-display text-[15px] font-medium text-foreground">
+            <div className="flex-1 min-w-0">
+              <p className="font-display text-[14px] font-medium text-foreground sm:text-[15px]">
                 {s.label}
               </p>
-              <p className="mt-0.5 font-zh-serif text-[13px] leading-relaxed text-muted-foreground">
+              <p className="mt-0.5 break-words font-zh-serif text-[12px] leading-relaxed text-muted-foreground sm:text-[13px]">
                 {s.example}
               </p>
             </div>
@@ -122,7 +120,7 @@ export const Greeting = () => {
 
       <motion.div
         animate={{ opacity: 1 }}
-        className="mt-8 flex flex-wrap items-baseline justify-between gap-3 text-[12px] text-muted-foreground"
+        className="mt-6 flex flex-col items-start gap-2 text-[11px] text-muted-foreground sm:mt-8 sm:flex-row sm:flex-wrap sm:items-baseline sm:justify-between sm:gap-3 sm:text-[12px]"
         initial={{ opacity: 0 }}
         transition={{ delay: 0.85, duration: 0.5, ease }}
       >

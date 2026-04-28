@@ -24,18 +24,16 @@ export function Preview() {
         </span>
       </div>
 
-      <div className="flex flex-1 flex-col items-stretch justify-center gap-10 px-10">
-        <div className="space-y-5">
-          <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-[color:var(--muted-foreground)]">
+      <div className="flex flex-1 flex-col items-stretch justify-center gap-8 px-5 sm:gap-10 sm:px-10">
+        <div className="space-y-4 sm:space-y-5">
+          <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[color:var(--muted-foreground)] sm:tracking-[0.32em]">
             Side-Effect Triage
           </p>
           <div className="h-px w-12 bg-[var(--cdss-line)]" aria-hidden />
-          <h2 className="font-display font-medium text-[40px] leading-[1.05] tracking-tight">
-            请描述您
-            <br />
-            治疗期间的<span className="italic">不适</span>
+          <h2 className="break-words font-display font-medium leading-[1.1] tracking-tight text-[26px] sm:text-[40px]">
+            请描述您治疗期间的<span className="italic">不适</span>
           </h2>
-          <p className="max-w-md font-zh-serif text-[15px] leading-[1.75] text-[color:var(--muted-foreground)]">
+          <p className="max-w-md break-words font-zh-serif text-[13px] leading-[1.75] text-[color:var(--muted-foreground)] sm:text-[15px]">
             162 条规则字典 + AI 抽取 · 每条结论可追溯到具体规则编号
           </p>
         </div>

@@ -220,7 +220,7 @@ export function AssessmentCard({ bundle }: { bundle: AssessmentBundle }) {
       {/* Audit footer */}
       <footer className="border-[var(--cdss-line)] border-t bg-[var(--cdss-rule)]/30 p-5">
         <SectionLabel number="03" title="审计信息" inline />
-        <dl className="mt-3 grid grid-cols-2 gap-x-6 gap-y-1.5 font-mono text-[10px]">
+        <dl className="mt-3 grid grid-cols-1 gap-x-6 gap-y-1.5 font-mono text-[10px] sm:grid-cols-2">
           <AuditRow label="规则版本" value={a.ruleVersion} />
           <AuditRow label="模型" value={a.modelId} />
           <AuditRow label="模型版本" value={a.modelVersion} />
@@ -230,7 +230,7 @@ export function AssessmentCard({ bundle }: { bundle: AssessmentBundle }) {
               hour12: false,
             })}
           />
-          <AuditRow label="评估 ID" value={a.id} className="col-span-2" />
+          <AuditRow label="评估 ID" value={a.id} className="sm:col-span-2" />
         </dl>
       </footer>
     </article>
