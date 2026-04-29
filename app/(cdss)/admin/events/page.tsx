@@ -44,9 +44,14 @@ export default async function AdminEventsPage() {
               <th className="px-3 py-2 text-left">Payload</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody data-testid="admin-events-tbody">
             {rows.map((row) => (
-              <tr key={row.id} className="border-t">
+              <tr
+                key={row.id}
+                className="border-t"
+                data-testid="admin-event-row"
+                data-event-name={row.eventName}
+              >
                 <td className="px-3 py-2 font-mono text-xs">
                   {new Date(row.createdAt).toLocaleString("zh-CN")}
                 </td>

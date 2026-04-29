@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Advice, Assessment, Evidence } from "@/lib/db/schema";
-import { track } from "@/lib/telemetry/client";
+import { track, trackBeacon } from "@/lib/telemetry/client";
 
 const RISK_META = {
   high: {
@@ -46,6 +46,33 @@ export function AssessmentCard({ bundle }: { bundle: AssessmentBundle }) {
   const [contactStatus, setContactStatus] = useState<
     "idle" | "loading" | "created" | "error"
   >("idle");
+  const viewedRef = useRef(false);
+  const enteredAtRef = useRef(Date.now());
+
+  useEffect(() => {
+    if (viewedRef.current) {
+      return;
+    }
+    viewedRef.current = true;
+    track({ name: "result_viewed", payload: { assessmentId: a.id } });
+  }, [a.id]);
+
+  useEffect(() => {
+    const fire = () => {
+      trackBeacon({
+        name: "assessment_closed",
+        payload: {
+          assessmentId: a.id,
+          viewDurationMs: Date.now() - enteredAtRef.current,
+        },
+      });
+    };
+    window.addEventListener("pagehide", fire);
+    return () => {
+      window.removeEventListener("pagehide", fire);
+      fire();
+    };
+  }, [a.id]);
 
   const meta = RISK_META[a.riskLevel];
 

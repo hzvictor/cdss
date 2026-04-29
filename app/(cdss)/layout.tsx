@@ -22,7 +22,7 @@ export default async function CdssLayout({
       <header className="border-[var(--cdss-line)] border-b">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
           <Link
-            href="/assess"
+            href="/"
             className="group flex items-center gap-3"
           >
             <span className="grid h-8 w-8 place-items-center rounded-full border border-[var(--cdss-line)] bg-[var(--cdss-paper)]">
@@ -40,7 +40,7 @@ export default async function CdssLayout({
             </span>
           </Link>
           <nav className="flex items-center gap-1 text-sm">
-            <NavLink href="/assess">新评估</NavLink>
+            <NavLink href="/">新评估</NavLink>
             <NavLink href="/history">历史</NavLink>
             {isAdmin && <NavLink href="/admin/assessments">管理</NavLink>}
             <span className="ml-3 hidden border-[var(--cdss-line)] border-l pl-3 text-[11px] text-[color:var(--muted-foreground)] sm:inline">

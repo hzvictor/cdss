@@ -1,8 +1,10 @@
 import { generateId } from "ai";
-import { getUnixTime } from "date-fns";
 
 export function generateRandomTestUser() {
-  const email = `test-${getUnixTime(new Date())}@playwright.com`;
+  // Combine ms timestamp with a short random tag so two users created in
+  // the same beforeAll get distinct emails.
+  const tag = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  const email = `test-${tag}@playwright.com`;
   const password = generateId();
 
   return {

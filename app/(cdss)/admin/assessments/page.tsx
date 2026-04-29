@@ -45,9 +45,15 @@ export default async function AdminAssessmentsPage() {
               <th className="px-3 py-2 text-left">联系</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody data-testid="admin-assessments-tbody">
             {safeRows.map((row) => (
-              <tr key={row.id} className="border-t">
+              <tr
+                key={row.id}
+                className="border-t"
+                data-testid="admin-assessment-row"
+                data-assessment-id={row.id}
+                data-risk={row.riskLevel}
+              >
                 <td className="px-3 py-2 font-mono text-xs">
                   {new Date(row.createdAt).toLocaleString("zh-CN", {
                     hour12: false,
@@ -57,6 +63,7 @@ export default async function AdminAssessmentsPage() {
                   <Badge
                     variant="outline"
                     className={RISK_BADGE[row.riskLevel].className}
+                    data-testid="admin-risk-badge"
                   >
                     {RISK_BADGE[row.riskLevel].label}
                   </Badge>

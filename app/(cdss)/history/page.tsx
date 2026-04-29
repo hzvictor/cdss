@@ -48,7 +48,7 @@ export default async function HistoryPage() {
             还没有评估记录。
           </p>
           <Link
-            href="/assess"
+            href="/"
             className="mt-4 inline-block font-mono text-[color:var(--primary)] text-[12px] uppercase tracking-[0.2em] hover:underline"
           >
             开始第一次评估 →

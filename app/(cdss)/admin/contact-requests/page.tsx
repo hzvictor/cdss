@@ -29,9 +29,16 @@ export default async function AdminContactRequestsPage() {
             <th className="px-3 py-2 text-left">备注</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody data-testid="admin-contact-requests-tbody">
           {rows.map((row) => (
-            <tr key={row.id} className="border-t">
+            <tr
+              key={row.id}
+              className="border-t"
+              data-testid="admin-contact-row"
+              data-channel={row.channel}
+              data-status={row.status}
+              data-assessment-id={row.assessmentId}
+            >
               <td className="px-3 py-2 font-mono text-xs">
                 {new Date(row.createdAt).toLocaleString("zh-CN")}
               </td>

@@ -91,16 +91,18 @@ http://localhost:3000
 ## 测试
 
 ```bash
-pnpm test:unit
+pnpm test:unit       # 121 个 Vitest 单元测试
+pnpm test:e2e        # Playwright e2e（需要 dev server + Postgres）
 pnpm exec tsc --noEmit
 ```
 
 当前已验证：
 
-- 规则引擎单元测试通过
-- TypeScript 类型检查通过
+- 121 / 121 单元测试通过（risk engine、agent loop、telemetry、rules-cache、tools）
+- 21 / 22 e2e 通过（剩 1 个 live-LLM 烟雾测试在无 API key 时跳过）
+- TypeScript 类型检查 0 错误
 
 ## 更多说明
 
-- [系统设计图](./SYSTEM_DESIGN.zh-CN.md)
-- [面试系统设计说明](./INTERVIEW.md)
+- [系统设计与 Agent 闭环](./INTERVIEW.md)
+
